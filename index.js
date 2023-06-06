@@ -7,6 +7,7 @@ dotenv.config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const vehiclesRoutes = require("./src/routes/vehicles");
 const remindersRoutes = require("./src/routes/reminders");
@@ -35,6 +36,14 @@ app.use("/auth", authenticationRoutes);
 
 // Error handler should be last piece of middleware
 app.use(errorHandler);
+app.use(express.static("client/build"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"), (err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
 
 // connect to database
 mongoose
